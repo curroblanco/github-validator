@@ -21,15 +21,10 @@ public class GitHubRepoTester {
 
       // Detectar si el proyecto usa Maven o Gradle
       String buildCommand = detectBuildTool(repoName);
-      String testCommand = determineTestCommand(buildCommand);
 
       // Ejecutar el comando de construcción
       System.out.println("Ejecutando " + buildCommand + " en el repositorio: " + repoName);
       executeCommand("cd " + repoName + " && " + buildCommand);
-
-      // Ejecutar solo los tests unitarios
-      System.out.println("Ejecutando tests unitarios...");
-      executeCommand("cd " + repoName + " && " + testCommand);
 
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
@@ -45,24 +40,12 @@ public class GitHubRepoTester {
     File repoDir = new File(repoName);
     if (new File(repoDir, "pom.xml").exists()) {
       System.out.println("Detectado proyecto Maven.");
-      return "mvn";
+      return "mvn clean compile";
     } else if (new File(repoDir, "build.gradle").exists()) {
       System.out.println("Detectado proyecto Gradle.");
-      return "gradle";
+      return "gradle clean compileJava";
     } else {
       throw new RuntimeException("No se encontró ningún archivo de configuración de Maven o Gradle en el repositorio.");
-    }
-  }
-
-  private static String determineTestCommand(String buildCommand) {
-    if (buildCommand.equals("mvn")) {
-      // Ejecutar solo los tests unitarios en Maven
-      return "mvn test -DskipITs";
-    } else if (buildCommand.equals("gradle")) {
-      // Ejecutar solo los tests unitarios en Gradle
-      return "gradle test";
-    } else {
-      throw new RuntimeException("No se pudo determinar el comando de prueba para " + buildCommand);
     }
   }
 
