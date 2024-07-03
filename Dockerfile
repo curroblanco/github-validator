@@ -1,5 +1,5 @@
 # Usa una imagen base con Gradle y JDK, e instala Maven y Git
-FROM gradle:7.2.0-jdk11
+FROM gradle:7.2.0-jdk17
 
 # Instala Maven y Git
 RUN apt-get update && \
