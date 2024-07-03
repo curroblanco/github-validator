@@ -6,13 +6,17 @@ import java.io.InputStreamReader;
 public class GitHubRepoTester {
 
   public static void main(String[] args) {
+    if (args.length != 1) {
+      System.out.println("Uso: java GitHubRepoTester <URL del repositorio de GitHub>");
+      return;
+    }
 
-    String repoUrl = "https://github.com/SantiiL/zara-challenge.git";
+    String repoUrl = args[0];
     String repoName = getRepoNameFromUrl(repoUrl);
 
     try {
       // Clonar el repositorio
-      executeCommand("rm -rf " + repoUrl);
+      executeCommand("rm -rf " + repoName);
       System.out.println("Clonando el repositorio: " + repoUrl);
       executeCommand("git clone " + repoUrl);
 
