@@ -6,23 +6,21 @@ import java.io.InputStreamReader;
 public class GitHubRepoTester {
 
   public static void main(String[] args) {
-    if (args.length != 1) {
-      System.out.println("Uso: java GitHubRepoTester <URL del repositorio de GitHub>");
+    String repoUrl = args.length > 0 ? args[0] : System.getenv("REPO_URL");
+
+    if (repoUrl == null || repoUrl.isEmpty()) {
+      System.out.println("Error: No se proporcionó una URL del repositorio ni se estableció la variable de entorno REPO_URL.");
       return;
     }
 
-    String repoUrl = args[0];
     String repoName = getRepoNameFromUrl(repoUrl);
 
     try {
-      // Clonar el repositorio
       System.out.println("Clonando el repositorio: " + repoUrl);
       executeCommand("git clone " + repoUrl);
 
-      // Detectar si el proyecto usa Maven o Gradle
       String buildCommand = detectBuildTool(repoName);
 
-      // Ejecutar el comando de construcción
       System.out.println("Ejecutando " + buildCommand + " en el repositorio: " + repoName);
       executeCommand("cd " + repoName + " && " + buildCommand);
 
@@ -52,7 +50,6 @@ public class GitHubRepoTester {
   private static void executeCommand(String command) throws IOException, InterruptedException {
     System.out.println("Ejecutando comando: " + command);
     ProcessBuilder processBuilder = new ProcessBuilder();
-    // Usar bash para ejecutar los comandos
     processBuilder.command("bash", "-c", command);
 
     Process process = processBuilder.start();
